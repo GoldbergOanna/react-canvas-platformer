@@ -6,12 +6,14 @@ export default function GameCanvas() {
     const requestRef = useRef<number>(0);
     const previousTimeRef = useRef<number>(0);
     const contextRef = useRef<CanvasRenderingContext2D | null>(null);
+    const positionRef = useRef<{ x: number; y: number }>({ x: 0, y: 200 });
 
     const animate = (time: number) => {
         contextRef.current?.clearRect(0, 0, 800, 450);
         if(contextRef.current) {
+            positionRef.current.x += 3;
             contextRef.current.fillStyle = 'blue';
-            contextRef.current.fillRect(100, 200, 50, 50);
+            contextRef.current.fillRect(positionRef.current.x, positionRef.current.y, 50, 50);
         }
 
         if (previousTimeRef.current != undefined) {
