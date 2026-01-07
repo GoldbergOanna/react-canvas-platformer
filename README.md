@@ -1,5 +1,7 @@
 # react-canvas-platformer
 
+This a project in progress, keep tight, cool stuff are coming soon
+
 A 2D platformer prototype built with React and HTML5 Canvas, focusing on game loops, physics, and clean separation between declarative UI and imperative rendering.
 
 ## Architecture overview
