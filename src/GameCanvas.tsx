@@ -8,13 +8,16 @@ export default function GameCanvas() {
     const contextRef = useRef<CanvasRenderingContext2D | null>(null);
     const positionRef = useRef<{ x: number; y: number }>({ x: 0, y: 200 });
     const pressedKeysRef = useRef<Set<string>>(new Set());
+    const maxX = 800 - 50;
+    const maxY = 450 - 50;
 
-    const animate = (time: number) => {
-        contextRef.current?.clearRect(0, 0, 800, 450);
-        if(previousTimeRef.current != undefined) {
-            const deltaTime = time - previousTimeRef.current;
-            const moveDistance = deltaTime * 0.1;
-            if(pressedKeysRef.current.has('ArrowLeft')) {
+    const clamp = (value: number, min: number, max: number) => {
+        return Math.min(Math.max(value, min), max);
+    }
+
+    const handleKeyDown = (deltaTime: number) => {
+        const moveDistance = deltaTime * 0.1;
+         if(pressedKeysRef.current.has('ArrowLeft')) {
                 positionRef.current.x -= moveDistance;
             }
             if(pressedKeysRef.current.has('ArrowRight')) {
@@ -26,6 +29,15 @@ export default function GameCanvas() {
             if(pressedKeysRef.current.has('ArrowDown')) {
                 positionRef.current.y += moveDistance;
             }
+    }
+
+    const animate = (time: number) => {
+        contextRef.current?.clearRect(0, 0, 800, 450);
+        if(previousTimeRef.current != undefined) {
+            const deltaTime = time - previousTimeRef.current;
+            handleKeyDown(deltaTime);
+            positionRef.current.x = clamp(positionRef.current.x, 0, maxX);
+            positionRef.current.y = clamp(positionRef.current.y, 0, maxY);
         }
         if(contextRef.current) {
             contextRef.current.fillStyle = 'blue';
