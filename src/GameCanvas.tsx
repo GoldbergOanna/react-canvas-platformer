@@ -12,6 +12,7 @@ export default function GameCanvas() {
     const maxY = 450 - 50;
     const velocityRef = useRef<number>(0);
     const gra = 0.0015; // gravity acceleration
+    const jumpStrength = -0.65;
 
     const clamp = (value: number, min: number, max: number) => {
         return Math.min(Math.max(value, min), max);
@@ -26,7 +27,10 @@ export default function GameCanvas() {
                 positionRef.current.x += moveDistance;
             }
             if(pressedKeysRef.current.has('ArrowUp')) {
-                positionRef.current.y -= moveDistance;
+                if (positionRef.current.y >= maxY) {
+                    velocityRef.current = jumpStrength; 
+                }
+                // positionRef.current.y -= moveDistance;
             }
             if(pressedKeysRef.current.has('ArrowDown')) {
                 positionRef.current.y += moveDistance;
