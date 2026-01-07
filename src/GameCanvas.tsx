@@ -48,6 +48,7 @@ export default function GameCanvas() {
             positionRef.current.y = clamp(positionRef.current.y, 0, maxY);
             if(positionRef.current.y >= maxY) {
                 velocityRef.current = 0;
+                positionRef.current.y = maxY;
             }
         }
         if(contextRef.current) {
