@@ -7,18 +7,29 @@ export default function GameCanvas() {
     const previousTimeRef = useRef<number>(0);
     const contextRef = useRef<CanvasRenderingContext2D | null>(null);
     const positionRef = useRef<{ x: number; y: number }>({ x: 0, y: 200 });
+    const pressedKeysRef = useRef<Set<string>>(new Set());
 
     const animate = (time: number) => {
         contextRef.current?.clearRect(0, 0, 800, 450);
+        if(previousTimeRef.current != undefined) {
+            const deltaTime = time - previousTimeRef.current;
+            const moveDistance = deltaTime * 0.1;
+            if(pressedKeysRef.current.has('ArrowLeft')) {
+                positionRef.current.x -= moveDistance;
+            }
+            if(pressedKeysRef.current.has('ArrowRight')) {
+                positionRef.current.x += moveDistance;
+            }
+            if(pressedKeysRef.current.has('ArrowUp')) {
+                positionRef.current.y -= moveDistance;
+            }
+            if(pressedKeysRef.current.has('ArrowDown')) {
+                positionRef.current.y += moveDistance;
+            }
+        }
         if(contextRef.current) {
-            positionRef.current.x += 3;
             contextRef.current.fillStyle = 'blue';
             contextRef.current.fillRect(positionRef.current.x, positionRef.current.y, 50, 50);
-        }
-
-        if (previousTimeRef.current != undefined) {
-            const deltaTime = time - previousTimeRef.current;
-        //    console.log(`Delta time: ${deltaTime} ms`);
         }
         previousTimeRef.current = time; 
         requestRef.current = requestAnimationFrame(animate);
@@ -37,6 +48,21 @@ export default function GameCanvas() {
             if (requestRef.current) {
                 cancelAnimationFrame(requestRef.current);
             }
+        }
+    }, []);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            pressedKeysRef.current.add(e.key);
+        }
+        const handleKeyUp = (e: KeyboardEvent) => {
+            pressedKeysRef.current.delete(e.key);
+        }
+        window.addEventListener('keydown', handleKeyDown);
+        window.addEventListener('keyup', handleKeyUp);
+        return () => {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
         }
     }, []);
 
