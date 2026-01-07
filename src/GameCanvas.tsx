@@ -10,6 +10,8 @@ export default function GameCanvas() {
     const pressedKeysRef = useRef<Set<string>>(new Set());
     const maxX = 800 - 50;
     const maxY = 450 - 50;
+    const velocityRef = useRef<number>(0);
+    const gra = 0.0015; // gravity acceleration
 
     const clamp = (value: number, min: number, max: number) => {
         return Math.min(Math.max(value, min), max);
@@ -34,10 +36,15 @@ export default function GameCanvas() {
     const animate = (time: number) => {
         contextRef.current?.clearRect(0, 0, 800, 450);
         if(previousTimeRef.current != undefined) {
-            const deltaTime = time - previousTimeRef.current;
+            const deltaTime = time - previousTimeRef.current
             handleKeyDown(deltaTime);
+            velocityRef.current += gra * deltaTime;
+            positionRef.current.y += velocityRef.current * deltaTime;
             positionRef.current.x = clamp(positionRef.current.x, 0, maxX);
             positionRef.current.y = clamp(positionRef.current.y, 0, maxY);
+            if(positionRef.current.y >= maxY) {
+                velocityRef.current = 0;
+            }
         }
         if(contextRef.current) {
             contextRef.current.fillStyle = 'blue';
