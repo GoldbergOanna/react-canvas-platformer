@@ -9,13 +9,17 @@ export default function GameCanvas() {
 
     const animate = (time: number) => {
         contextRef.current?.clearRect(0, 0, 800, 450);
+        if(contextRef.current) {
+            contextRef.current.fillStyle = 'blue';
+            contextRef.current.fillRect(100, 200, 50, 50);
+        }
+
         if (previousTimeRef.current != undefined) {
             const deltaTime = time - previousTimeRef.current;
-           console.log(`Delta time: ${deltaTime} ms`);
+        //    console.log(`Delta time: ${deltaTime} ms`);
         }
         previousTimeRef.current = time; 
         requestRef.current = requestAnimationFrame(animate);
-
     }
 
     useEffect(() => {
